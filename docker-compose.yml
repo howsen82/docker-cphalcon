@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: phalcon_app
+    build: .
+    working_dir: /var/www/html
+    volumes:
+      - ./html:/var/www/html
+    ports:
+      - 8080:80
+    expose:
+      - 8080
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  mysql:
+    container_name: phalcon_db
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: phalcon_app
+      MYSQL_ROOT_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - 3306:3306
+
+# docker compose build app
+# docker-compose up -d
+# docker exec -ti phalcon_app composer init
+# docker exec -ti phalcon_app composer require --dev phalcon/devtools
+# docker exec -ti phalcon_app ./vendor/bin/phalcon project application simple
